@@ -43,6 +43,7 @@ type
   private
     { Private êÈåæ }
     procedure loop(item: TTreeNode; JSON: TJSONObject);
+    procedure arrloop(item: TTreeNode; arr: TJSONArray);
   public
     { Public êÈåæ }
   end;
@@ -56,19 +57,47 @@ implementation
 
 uses Clipbrd;
 
+procedure TForm1.arrloop(item: TTreeNode; arr: TJSONArray);
+var
+  s: string;
+  val: TJSONValue;
+  i: integer;
+begin
+  item := TreeView1.Items.AddChild(item, s);
+  for i := 0 to arr.count - 1 do
+  begin
+    s := '_' + arr.Items[i].ToString;
+    val := arr.Items[i];
+    if val is TJSONObject then
+      loop(item, val as TJSONObject)
+    else if val is TJSONArray then
+      arrloop(item, val as TJSONArray)
+    else
+      TreeView1.Items.AddChild(item, s);
+  end;
+end;
+
 procedure TForm1.loop(item: TTreeNode; JSON: TJSONObject);
 var
-  i: Integer;
+  i, j: integer;
   pair: TJSONPair;
   s: string;
+  val: TJSONValue;
 begin
   for i := 0 to JSON.count - 1 do
   begin
     pair := JSON.Pairs[i];
-    if pair.JsonValue is TJSONObject then
+    val := pair.JsonValue;
+    if val is TJSONObject then
     begin
       s := pair.JsonString.ToString + ':';
-      loop(TreeView1.Items.AddChild(item, s), pair.JsonValue as TJSONObject);
+      JSON := pair.JsonValue as TJSONObject;
+      loop(TreeView1.Items.AddChild(item, s), JSON);
+    end
+    else if val is TJSONArray then
+    begin
+      s := pair.JsonString.ToString;
+      arrloop(TreeView1.Items.AddChild(item, s), pair.JsonValue as TJSONArray);
     end
     else
     begin
@@ -80,7 +109,7 @@ end;
 
 procedure TForm1.ToolButton2Click(Sender: TObject);
 var
-  i: Integer;
+  i: integer;
   j: TJSONObject;
 begin
   TreeView1.Items.Clear;
