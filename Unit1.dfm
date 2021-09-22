@@ -10,6 +10,7 @@ object Form1: TForm1
   Font.Height = -23
   Font.Name = 'Tahoma'
   Font.Style = []
+  Menu = MainMenu1
   OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 28
@@ -19,9 +20,8 @@ object Form1: TForm1
     Width = 625
     Height = 335
     Align = alClient
+    PopupMenu = PopupMenu1
     TabOrder = 0
-    ExplicitWidth = 360
-    ExplicitHeight = 274
   end
   object ToolBar1: TToolBar
     Left = 0
@@ -31,7 +31,6 @@ object Form1: TForm1
     Caption = 'ToolBar1'
     Images = ImageList1
     TabOrder = 1
-    ExplicitWidth = 635
     object ToolButton1: TToolButton
       Left = 0
       Top = 0
@@ -80,8 +79,6 @@ object Form1: TForm1
     Align = alRight
     Indent = 19
     TabOrder = 2
-    ExplicitLeft = 360
-    ExplicitHeight = 274
   end
   object StatusBar1: TStatusBar
     Left = 0
@@ -92,9 +89,6 @@ object Form1: TForm1
       item
         Width = 50
       end>
-    ExplicitLeft = 456
-    ExplicitTop = 248
-    ExplicitWidth = 0
   end
   object Memo2: TMemo
     Left = 0
@@ -113,7 +107,7 @@ object Form1: TForm1
     Left = 200
     Top = 88
     Bitmap = {
-      494C010102000800240010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800280010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -251,5 +245,80 @@ object Form1: TForm1
       8001FC00000000008001FF00000000008001FFC0000000008001FFE000000000
       8001FFF800000000FFFFFFFE0000000000000000000000000000000000000000
       000000000000}
+  end
+  object ActionList1: TActionList
+    Left = 368
+    Top = 176
+    object EditCopy1: TEditCopy
+      Category = #32232#38598
+      Caption = #12467#12500#12540'(&C)'
+      Hint = #12467#12500#12540'|'#36984#25246#37096#20998#12434#12467#12500#12540#12375#12390#12463#12522#12483#12503#12508#12540#12489#12395#20837#12428#12414#12377
+      ImageIndex = 1
+      ShortCut = 16451
+    end
+    object EditCut1: TEditCut
+      Category = #32232#38598
+      Caption = #20999#12426#21462#12426'(&T)'
+      Hint = #20999#12426#21462#12426'|'#36984#25246#37096#20998#12434#20999#12426#21462#12387#12390#12463#12522#12483#12503#12508#12540#12489#12395#20837#12428#12414#12377
+      ImageIndex = 0
+      ShortCut = 16472
+    end
+    object EditPaste1: TEditPaste
+      Category = #32232#38598
+      Caption = #36028#12426#20184#12369'(&P)'
+      Hint = #36028#12426#20184#12369'|'#12463#12522#12483#12503#12508#12540#12489#12398#20869#23481#12434#25407#20837#12375#12414#12377
+      ImageIndex = 2
+      ShortCut = 16470
+    end
+    object EditSelectAll1: TEditSelectAll
+      Category = #32232#38598
+      Caption = #12377#12409#12390#36984#25246'(&A)'
+      Hint = #12377#12409#12390#36984#25246'|'#12489#12461#12517#12513#12531#12488#20840#20307#12434#36984#25246#12375#12414#12377
+      ShortCut = 16449
+    end
+    object EditUndo1: TEditUndo
+      Category = #32232#38598
+      Caption = #20803#12395#25147#12377'(&U)'
+      Hint = #20803#12395#25147#12377'|'#30452#21069#12398#25805#20316#12434#20803#12395#25147#12375#12414#12377
+      ImageIndex = 3
+      ShortCut = 16474
+    end
+    object Action1: TAction
+      Caption = #23455#34892
+      OnExecute = ToolButton2Click
+    end
+    object Action2: TAction
+      Caption = #12504#12523#12503
+      OnExecute = ToolButton5Click
+    end
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 368
+    Top = 232
+    object C1: TMenuItem
+      Action = EditCopy1
+    end
+    object T1: TMenuItem
+      Action = EditCut1
+    end
+    object P1: TMenuItem
+      Action = EditPaste1
+    end
+    object A1: TMenuItem
+      Action = EditSelectAll1
+    end
+    object U1: TMenuItem
+      Action = EditUndo1
+    end
+  end
+  object MainMenu1: TMainMenu
+    Left = 256
+    Top = 232
+    object Action11: TMenuItem
+      Action = Action1
+    end
+    object H1: TMenuItem
+      Action = Action2
+    end
   end
 end

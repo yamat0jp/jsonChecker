@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.ToolWin,
-  Vcl.ImgList, JSON;
+  Vcl.ImgList, JSON, Vcl.Menus, Vcl.StdActns, System.Actions, Vcl.ActnList;
 
 type
   TForm1 = class(TForm)
@@ -21,6 +21,23 @@ type
     ToolButton4: TToolButton;
     ToolButton5: TToolButton;
     Memo2: TMemo;
+    ActionList1: TActionList;
+    PopupMenu1: TPopupMenu;
+    EditPaste1: TEditPaste;
+    EditSelectAll1: TEditSelectAll;
+    EditUndo1: TEditUndo;
+    EditCut1: TEditCut;
+    EditCopy1: TEditCopy;
+    C1: TMenuItem;
+    T1: TMenuItem;
+    P1: TMenuItem;
+    A1: TMenuItem;
+    U1: TMenuItem;
+    MainMenu1: TMainMenu;
+    Action1: TAction;
+    Action2: TAction;
+    Action11: TMenuItem;
+    H1: TMenuItem;
     procedure ToolButton2Click(Sender: TObject);
     procedure ToolButton5Click(Sender: TObject);
   private
