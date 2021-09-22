@@ -23,7 +23,6 @@ object Form1: TForm1
     Align = alClient
     PopupMenu = PopupMenu1
     TabOrder = 0
-    ExplicitHeight = 335
   end
   object ToolBar1: TToolBar
     Left = 0
@@ -64,13 +63,29 @@ object Form1: TForm1
       ImageIndex = 1
       Style = tbsSeparator
     end
-    object ToolButton5: TToolButton
+    object ToolButton6: TToolButton
       Left = 81
+      Top = 0
+      Width = 8
+      Caption = 'ToolButton6'
+      ImageIndex = 2
+      Style = tbsSeparator
+    end
+    object ToolButton5: TToolButton
+      Left = 89
       Top = 0
       Hint = 'Help'
       Caption = 'ToolButton5'
       ImageIndex = 1
       OnClick = ToolButton5Click
+    end
+    object ToolButton7: TToolButton
+      Left = 112
+      Top = 0
+      Width = 8
+      Caption = 'ToolButton7'
+      ImageIndex = 2
+      Style = tbsSeparator
     end
   end
   object TreeView1: TTreeView
@@ -82,7 +97,6 @@ object Form1: TForm1
     Indent = 19
     ReadOnly = True
     TabOrder = 2
-    ExplicitHeight = 335
   end
   object StatusBar1: TStatusBar
     Left = 0
@@ -93,7 +107,6 @@ object Form1: TForm1
       item
         Width = 50
       end>
-    ExplicitLeft = 8
   end
   object TabControl1: TTabControl
     Left = 0
@@ -119,8 +132,6 @@ object Form1: TForm1
       ReadOnly = True
       ScrollBars = ssVertical
       TabOrder = 0
-      ExplicitLeft = 5
-      ExplicitTop = 40
     end
     object Memo3: TMemo
       Left = 360
@@ -152,7 +163,7 @@ object Form1: TForm1
     Left = 200
     Top = 88
     Bitmap = {
-      494C0101020008002C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800300010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

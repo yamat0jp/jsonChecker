@@ -41,6 +41,8 @@ type
     TabControl1: TTabControl;
     Memo3: TMemo;
     Memo4: TMemo;
+    ToolButton6: TToolButton;
+    ToolButton7: TToolButton;
     procedure ToolButton2Click(Sender: TObject);
     procedure ToolButton5Click(Sender: TObject);
     procedure TabControl1Change(Sender: TObject);
@@ -68,10 +70,10 @@ var
   val: TJSONValue;
   i: integer;
 begin
-  item := TreeView1.Items.AddChild(item, s);
+  item := TreeView1.Items.AddChild(item, '_array');
   for i := 0 to arr.count - 1 do
   begin
-    s := '_' + arr.Items[i].ToString;
+    s := arr.Items[i].ToString;
     val := arr.Items[i];
     if val is TJSONObject then
       loop(item, val as TJSONObject)
