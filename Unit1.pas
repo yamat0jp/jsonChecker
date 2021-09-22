@@ -36,17 +36,32 @@ type
     MainMenu1: TMainMenu;
     Action1: TAction;
     Action2: TAction;
-    Action11: TMenuItem;
-    H1: TMenuItem;
     TabControl1: TTabControl;
     Memo3: TMemo;
     Memo4: TMemo;
     ToolButton6: TToolButton;
     ToolButton7: TToolButton;
+    FileExit1: TFileExit;
+    N1: TMenuItem;
+    N2: TMenuItem;
+    N4: TMenuItem;
+    N5: TMenuItem;
+    X1: TMenuItem;
+    C2: TMenuItem;
+    T2: TMenuItem;
+    P2: TMenuItem;
+    A2: TMenuItem;
+    U2: TMenuItem;
+    N3: TMenuItem;
+    N6: TMenuItem;
+    ToolButton8: TToolButton;
+    ToolButton9: TToolButton;
+    ToolButton10: TToolButton;
     procedure ToolButton2Click(Sender: TObject);
     procedure ToolButton5Click(Sender: TObject);
     procedure TabControl1Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure Memo1Change(Sender: TObject);
   private
     { Private êÈåæ }
     procedure loop(item: TTreeNode; JSON: TJSONObject);
@@ -91,7 +106,7 @@ end;
 
 procedure TForm1.loop(item: TTreeNode; JSON: TJSONObject);
 var
-  i, j: integer;
+  i: integer;
   pair: TJSONPair;
   s: string;
   val: TJSONValue;
@@ -119,12 +134,21 @@ begin
   end;
 end;
 
+procedure TForm1.Memo1Change(Sender: TObject);
+begin
+  if Memo1.Text = '' then
+  begin
+    TreeView1.Items.Clear;
+    TreeView1.Items.Add(nil, 'JSON items');
+  end;
+end;
+
 procedure TForm1.TabControl1Change(Sender: TObject);
 begin
   if TabControl1.TabIndex = 0 then
-    Memo2.Text:=Memo3.Text
+    Memo2.Text := Memo3.Text
   else
-    Memo2.Text:=Memo4.Text;
+    Memo2.Text := Memo4.Text;
 end;
 
 procedure TForm1.ToolButton2Click(Sender: TObject);
@@ -133,6 +157,8 @@ var
   j: TJSONObject;
 begin
   TreeView1.Items.Clear;
+  if Memo1.Text = '' then
+    Memo1.Text := Clipboard.AsText;
   j := TJSONObject.ParseJSONValue(Memo1.Text) as TJSONObject;
   if j <> nil then
     loop(nil, j);
@@ -149,7 +175,7 @@ end;
 
 procedure TForm1.ToolButton5Click(Sender: TObject);
 begin
-  TabControl1.Visible:=not TabControl1.Visible;
+  TabControl1.Visible := not TabControl1.Visible;
 end;
 
 end.
