@@ -38,8 +38,13 @@ type
     Action2: TAction;
     Action11: TMenuItem;
     H1: TMenuItem;
+    TabControl1: TTabControl;
+    Memo3: TMemo;
+    Memo4: TMemo;
     procedure ToolButton2Click(Sender: TObject);
     procedure ToolButton5Click(Sender: TObject);
+    procedure TabControl1Change(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private êÈåæ }
     procedure loop(item: TTreeNode; JSON: TJSONObject);
@@ -77,6 +82,11 @@ begin
   end;
 end;
 
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  TabControl1Change(nil);
+end;
+
 procedure TForm1.loop(item: TTreeNode; JSON: TJSONObject);
 var
   i, j: integer;
@@ -107,6 +117,14 @@ begin
   end;
 end;
 
+procedure TForm1.TabControl1Change(Sender: TObject);
+begin
+  if TabControl1.TabIndex = 0 then
+    Memo2.Text:=Memo3.Text
+  else
+    Memo2.Text:=Memo4.Text;
+end;
+
 procedure TForm1.ToolButton2Click(Sender: TObject);
 var
   i: integer;
@@ -129,7 +147,7 @@ end;
 
 procedure TForm1.ToolButton5Click(Sender: TObject);
 begin
-  Memo2.Visible := not Memo2.Visible;
+  TabControl1.Visible:=not TabControl1.Visible;
 end;
 
 end.

@@ -12,16 +12,18 @@ object Form1: TForm1
   Font.Style = []
   Menu = MainMenu1
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 28
   object Memo1: TMemo
     Left = 0
     Top = 25
     Width = 625
-    Height = 335
+    Height = 287
     Align = alClient
     PopupMenu = PopupMenu1
     TabOrder = 0
+    ExplicitHeight = 335
   end
   object ToolBar1: TToolBar
     Left = 0
@@ -75,11 +77,12 @@ object Form1: TForm1
     Left = 625
     Top = 25
     Width = 275
-    Height = 335
+    Height = 287
     Align = alRight
     Indent = 19
     ReadOnly = True
     TabOrder = 2
+    ExplicitHeight = 335
   end
   object StatusBar1: TStatusBar
     Left = 0
@@ -90,19 +93,60 @@ object Form1: TForm1
       item
         Width = 50
       end>
+    ExplicitLeft = 8
   end
-  object Memo2: TMemo
+  object TabControl1: TTabControl
     Left = 0
-    Top = 360
+    Top = 312
     Width = 900
-    Height = 103
+    Height = 151
     Align = alBottom
-    Lines.Strings = (
-      'json'#25991#23383#21015#12434#20837#21147#12375#12390#12367#12384#12373#12356#12290
-      #35299#26512#32080#26524#12364#21491#12395#12290#12463#12522#12483#12503#12508#12540#12489#12395#32232#38598#20013#12398#20869#23481#12364#12467#12500#12540#12373#12428#12414#12377#12290)
-    ReadOnly = True
     TabOrder = 4
+    Tabs.Strings = (
+      #12504#12523#12503
+      #12496#12540#12472#12519#12531#24773#22577)
+    TabIndex = 0
     Visible = False
+    OnChange = TabControl1Change
+    object Memo2: TMemo
+      Left = 4
+      Top = 39
+      Width = 892
+      Height = 108
+      Align = alClient
+      Lines.Strings = (
+        '')
+      ReadOnly = True
+      ScrollBars = ssVertical
+      TabOrder = 0
+      ExplicitLeft = 5
+      ExplicitTop = 40
+    end
+    object Memo3: TMemo
+      Left = 360
+      Top = 32
+      Width = 185
+      Height = 89
+      Lines.Strings = (
+        'json'#25991#23383#21015#12434#20837#21147#12375#12390#12367#12384#12373#12356#12290
+        #35299#26512#32080#26524#12364#21491#12395#12290#12463#12522#12483#12503#12508#12540#12489#12395#32232#38598#20013#12398#20869#23481#12364#12467#12500#12540#12373#12428#12414#12377#12290)
+      TabOrder = 1
+      Visible = False
+      WordWrap = False
+    end
+    object Memo4: TMemo
+      Left = 448
+      Top = 56
+      Width = 185
+      Height = 89
+      Lines.Strings = (
+        'TJSONArray '#12395#23550#24540#12375#12414#12375#12383' '
+        ' --------------------'
+        #21021#20844#38283)
+      TabOrder = 2
+      Visible = False
+      WordWrap = False
+    end
   end
   object ImageList1: TImageList
     Left = 200
