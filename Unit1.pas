@@ -57,6 +57,7 @@ type
     ToolButton8: TToolButton;
     ToolButton9: TToolButton;
     ToolButton10: TToolButton;
+    Memo5: TMemo;
     procedure ToolButton2Click(Sender: TObject);
     procedure ToolButton5Click(Sender: TObject);
     procedure TabControl1Change(Sender: TObject);
@@ -120,6 +121,9 @@ begin
     begin
       TreeView1.Items.AddChild(item, 'error');
       Showmessage('ì‡ïîÉGÉâÅ[Ç…ÇÊÇËíÜífÇµÇ‹ÇµÇΩ');
+      TabControl1.TabIndex:=2;
+      TabControl1Change(nil);
+      TabControl1.Show;
       Exit;
     end
     else
@@ -154,10 +158,14 @@ end;
 
 procedure TForm1.TabControl1Change(Sender: TObject);
 begin
-  if TabControl1.TabIndex = 0 then
-    Memo2.Text := Memo3.Text
-  else
+  case TabControl1.TabIndex of
+  0:
+    Memo2.Text := Memo3.Text;
+  1:
     Memo2.Text := Memo4.Text;
+  2:
+    Memo2.Text:=Memo5.Text;
+  end;
 end;
 
 procedure TForm1.ToolButton2Click(Sender: TObject);
