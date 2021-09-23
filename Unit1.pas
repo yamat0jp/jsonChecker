@@ -9,7 +9,7 @@ uses
   Vcl.ImgList, JSON, Vcl.Menus, Vcl.StdActns, System.Actions, Vcl.ActnList;
 
 type
-  TIndxChar = (chMul, chPlus, chMin, chEqu);
+  TIndxChar = (chMul, chPlus, chYen, chDollar, chSharp, chAnd, chPercent);
 
   TForm1 = class(TForm)
     Memo1: TMemo;
@@ -89,7 +89,13 @@ var
   s: string;
   val: TJSONValue;
   i: integer;
+  c: Char;
 begin
+  c := returnChar(id);
+  if id = High(id) then
+    id := Low(id)
+  else
+    id := Succ(id);
   for i := 0 to arr.count - 1 do
   begin
     val := arr.Items[i];
@@ -99,7 +105,7 @@ begin
       arrloop(item, val as TJSONArray)
     else
     begin
-      s := '_' + arr.Items[i].ToString;
+      s := c + '_' + arr.Items[i].ToString;
       TreeView1.Items.AddChild(item, s);
     end;
   end;
@@ -173,10 +179,16 @@ begin
       result := '*';
     chPlus:
       result := '+';
-    chMin:
-      result := '-';
-    chEqu:
-      result := '=';
+    chYen:
+      result := '\';
+    chDollar:
+      result := '$';
+    chSharp:
+      result := '#';
+    chAnd:
+      result := '&';
+    chPercent:
+      result := '%';
   end;
 end;
 
