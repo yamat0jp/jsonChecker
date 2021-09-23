@@ -9,6 +9,8 @@ uses
   Vcl.ImgList, JSON, Vcl.Menus, Vcl.StdActns, System.Actions, Vcl.ActnList;
 
 type
+  TIndxChar = (chMul, chPlus, chMin, chEqu);
+
   TForm1 = class(TForm)
     Memo1: TMemo;
     ToolBar1: TToolBar;
@@ -65,8 +67,10 @@ type
     procedure Memo1Change(Sender: TObject);
   private
     { Private êÈåæ }
+    id: TIndxChar;
     procedure loop(item: TTreeNode; JSON: TJSONObject);
     procedure arrloop(item: TTreeNode; arr: TJSONArray);
+    function returnChar(c: TIndxChar): Char;
   public
     { Public êÈåæ }
   end;
@@ -86,7 +90,6 @@ var
   val: TJSONValue;
   i: integer;
 begin
-  item := TreeView1.Items.AddChild(item, '_array');
   for i := 0 to arr.count - 1 do
   begin
     val := arr.Items[i];
@@ -96,7 +99,7 @@ begin
       arrloop(item, val as TJSONArray)
     else
     begin
-      s := arr.Items[i].ToString;
+      s := '_' + arr.Items[i].ToString;
       TreeView1.Items.AddChild(item, s);
     end;
   end;
@@ -113,7 +116,13 @@ var
   pair: TJSONPair;
   s: string;
   val: TJSONValue;
+  c: Char;
 begin
+  c := returnChar(id);
+  if id = High(id) then
+    id := Low(id)
+  else
+    id := Succ(id);
   for i := 0 to JSON.count - 1 do
   begin
     pair := JSON.Pairs[i];
@@ -121,7 +130,7 @@ begin
     begin
       TreeView1.Items.AddChild(item, 'error');
       Showmessage('ì‡ïîÉGÉâÅ[Ç…ÇÊÇËíÜífÇµÇ‹ÇµÇΩ');
-      TabControl1.TabIndex:=2;
+      TabControl1.TabIndex := 2;
       TabControl1Change(nil);
       TabControl1.Show;
       Exit;
@@ -130,18 +139,18 @@ begin
       val := pair.JsonValue;
     if val is TJSONObject then
     begin
-      s := pair.JsonString.ToString + ':';
+      s := c + pair.JsonString.ToString + ':';
       JSON := pair.JsonValue as TJSONObject;
       loop(TreeView1.Items.AddChild(item, s), JSON);
     end
     else if val is TJSONArray then
     begin
-      s := pair.JsonString.ToString + ':';
+      s := c + pair.JsonString.ToString + ':';
       arrloop(TreeView1.Items.AddChild(item, s), pair.JsonValue as TJSONArray);
     end
     else
     begin
-      s := pair.JsonString.ToString + ':' + pair.JsonValue.ToString;
+      s := c + pair.JsonString.ToString + ':' + pair.JsonValue.ToString;
       TreeView1.Items.AddChild(item, s);
     end;
   end;
@@ -156,15 +165,30 @@ begin
   end;
 end;
 
+function TForm1.returnChar(c: TIndxChar): Char;
+begin
+  result := ' ';
+  case c of
+    chMul:
+      result := '*';
+    chPlus:
+      result := '+';
+    chMin:
+      result := '-';
+    chEqu:
+      result := '=';
+  end;
+end;
+
 procedure TForm1.TabControl1Change(Sender: TObject);
 begin
   case TabControl1.TabIndex of
-  0:
-    Memo2.Text := Memo3.Text;
-  1:
-    Memo2.Text := Memo4.Text;
-  2:
-    Memo2.Text:=Memo5.Text;
+    0:
+      Memo2.Text := Memo3.Text;
+    1:
+      Memo2.Text := Memo4.Text;
+    2:
+      Memo2.Text := Memo5.Text;
   end;
 end;
 
@@ -173,6 +197,7 @@ var
   i: integer;
   j: TJSONObject;
 begin
+  id := Low(id);
   TreeView1.Items.Clear;
   if Memo1.Text = '' then
     Memo1.Text := Clipboard.AsText;
