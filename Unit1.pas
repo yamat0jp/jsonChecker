@@ -88,14 +88,16 @@ begin
   item := TreeView1.Items.AddChild(item, '_array');
   for i := 0 to arr.count - 1 do
   begin
-    s := arr.Items[i].ToString;
     val := arr.Items[i];
     if val is TJSONObject then
       loop(item, val as TJSONObject)
     else if val is TJSONArray then
       arrloop(item, val as TJSONArray)
     else
+    begin
+      s := arr.Items[i].ToString;
       TreeView1.Items.AddChild(item, s);
+    end;
   end;
 end;
 
@@ -114,7 +116,14 @@ begin
   for i := 0 to JSON.count - 1 do
   begin
     pair := JSON.Pairs[i];
-    val := pair.JsonValue;
+    if pair = nil then
+    begin
+      TreeView1.Items.AddChild(item, 'error');
+      Showmessage('ì‡ïîÉGÉâÅ[Ç…ÇÊÇËíÜífÇµÇ‹ÇµÇΩ');
+      Exit;
+    end
+    else
+      val := pair.JsonValue;
     if val is TJSONObject then
     begin
       s := pair.JsonString.ToString + ':';
@@ -123,7 +132,7 @@ begin
     end
     else if val is TJSONArray then
     begin
-      s := pair.JsonString.ToString;
+      s := pair.JsonString.ToString + ':';
       arrloop(TreeView1.Items.AddChild(item, s), pair.JsonValue as TJSONArray);
     end
     else
