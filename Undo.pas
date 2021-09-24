@@ -5,8 +5,6 @@ interface
 uses System.Contnrs, System.Classes, Vcl.StdCtrls;
 
 type
-  TUndoMethod = procedure(const str: string; pos: integer) of Object;
-
   TUndoBase = class
   private
     FPos: integer;

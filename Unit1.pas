@@ -105,10 +105,10 @@ var
   s: string;
 begin
   s := Clipboard.AsText;
-  Memo1.SelText:=s;
-  Memo1.SelStart:=Memo1.SelStart-Length(s);
-  Memo1.SelLength:=Length(s);
-  Undo.Pasted(Memo1.SelText,Memo1.SelStart);
+  Memo1.SelText := s;
+  Memo1.SelStart := Memo1.SelStart - Length(s);
+  Memo1.SelLength := Length(s);
+  Undo.Pasted(Memo1.SelText, Memo1.SelStart);
 end;
 
 procedure TForm1.arrloop(item: TTreeNode; arr: TJSONArray);
@@ -228,6 +228,8 @@ begin
           delstr := Memo1.Text[Memo1.SelStart]
         else
           delstr := Memo1.SelText;
+    VK_RETURN:
+      ;
   else
     if Memo1.SelLength > 0 then
       Undo.Deleted(Memo1.SelText, Memo1.SelStart, false);

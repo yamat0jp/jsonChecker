@@ -524,6 +524,7 @@ object Form1: TForm1
     object Action4: TAction
       Category = #32232#38598
       Caption = 'Past'
+      ShortCut = 16470
       OnExecute = Action4Execute
     end
   end
