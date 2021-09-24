@@ -7,28 +7,46 @@ uses System.Contnrs, System.Classes, Vcl.StdCtrls;
 type
   TUndoMethod = procedure(const str: string; pos: integer) of Object;
 
-  TUndoItem = class
+  TUndoBase = class
+  private
+    FPos: integer;
+    FMemo: TCustomMemo;
   public
-    str: string;
-    pos: integer;
-    top: Boolean;
-    meth: TUndoMethod;
+    procedure Execute; virtual; abstract;
+  end;
+
+  TUnInput = class(TUndoBase)
+  private
+    FData: Char;
+  public
+    procedure Execute; override;
+  end;
+
+  TUnDelete = class(TUndoBase)
+  private
+    FStr: string;
+    FTop: Boolean;
+  public
+    procedure Execute; override;
+  end;
+
+  TUnPaste = class(TUndoBase)
+  private
+    FLen: integer;
+  public
+    procedure Execute; override;
   end;
 
   TUndoClass = class(TComponent)
   private
     FStack: TObjectStack;
     FMemo: TCustomMemo;
-    procedure UnDelete(const str: string; pos: integer);
-    procedure UnInput(const str: string; pos: integer);
-    procedure UnPaste(const str: string; pos: integer);
     function GetCanUndo: Boolean;
-  protected
-    FTop: Boolean;
+    procedure Press;
   public
     constructor Create(AOwner: TComponent); override;
-    procedure Deleted(const str: string; pos: integer; top: Boolean);
-    procedure Inputted(const str: string; pos: integer);
+    procedure Deleted(const str: string ; pos: integer; top: Boolean);
+    procedure Inputted(c: Char; pos: integer);
     procedure Pasted(const str: string; pos: integer);
     procedure Execute;
     destructor Destroy; override;
@@ -49,13 +67,13 @@ end;
 
 procedure TUndoClass.Deleted(const str: string; pos: integer; top: Boolean);
 var
-  obj: TUndoItem;
+  obj: TUnDelete;
 begin
-  obj := TUndoItem.Create;
-  obj.str := str;
-  obj.pos := pos;
-  obj.top := top;
-  obj.meth := UnDelete;
+  obj := TUnDelete.Create;
+  obj.FStr := str;
+  obj.FPos := pos;
+  obj.FTop := top;
+  obj.FMemo := FMemo;
   FStack.Push(obj);
 end;
 
@@ -71,13 +89,12 @@ end;
 
 procedure TUndoClass.Execute;
 var
-  obj: TUndoItem;
+  obj: TUndoBase;
 begin
   if FStack.Count > 0 then
   begin
-    obj := FStack.Pop as TUndoItem;
-    FTop := obj.top;
-    obj.meth(obj.str, obj.pos);
+    obj := FStack.Pop as TUndoBase;
+    obj.Execute;
   end;
 end;
 
@@ -86,54 +103,65 @@ begin
   result := FStack.Count > 0;
 end;
 
-procedure TUndoClass.Inputted(const str: string; pos: integer);
+procedure TUndoClass.Inputted(c: Char; pos: integer);
 var
-  obj: TUndoItem;
+  obj: TUnInput;
 begin
-  obj := TUndoItem.Create;
-  obj.str := str;
-  obj.pos := pos;
-  obj.meth := UnInput;
+  obj := TUnInput.Create;
+  obj.FData := c;
+  obj.FPos := pos;
+  obj.FMemo := FMemo;
   FStack.Push(obj);
 end;
 
 procedure TUndoClass.Pasted(const str: string; pos: integer);
 var
-  obj: TUndoItem;
+  obj: TUnPaste;
 begin
-  obj := TUndoItem.Create;
-  obj.str := str;
-  obj.pos := pos;
-  obj.meth := UnPaste;
+  obj := TUnPaste.Create;
+  obj.FPos := pos;
+  obj.FLen := Length(str);
+  obj.FMemo := FMemo;
   FStack.Push(obj);
 end;
 
-procedure TUndoClass.UnDelete(const str: string; pos: integer);
+procedure TUndoClass.Press;
 begin
-  Memo.SelStart := pos;
-  Memo.SelText := str;
-  Memo.SelStart := pos;
-  if Length(str) > 1 then
-    Memo.SelLength := Length(str);
+
+end;
+
+{ TUnDelete }
+
+procedure TUnDelete.Execute;
+begin
+  FMemo.SelStart := FPos;
+  FMemo.SelText := FStr;
+  FMemo.SelStart := FPos;
+  if Length(FStr) > 1 then
+    FMemo.SelLength := Length(FStr);
   if FTop = true then
   begin
-    Memo.SelStart := pos;
-    Memo.SelLength := Length(str);
+    FMemo.SelStart := FPos;
+    FMemo.SelLength := Length(FStr);
   end;
 end;
 
-procedure TUndoClass.UnInput(const str: string; pos: integer);
+{ TUnPaste }
+
+procedure TUnPaste.Execute;
 begin
-  Memo.SelStart := pos;
-  Memo.SelLength := 1;
-  Memo.SelText := '';
+  FMemo.SelStart := FPos;
+  FMemo.SelLength := FLen;
+  FMemo.SelText := '';
 end;
 
-procedure TUndoClass.UnPaste(const str: string; pos: integer);
+{ TUnInput }
+
+procedure TUnInput.Execute;
 begin
-  Memo.SelStart := pos;
-  Memo.SelLength := Length(str);
-  Memo.SelText := '';
+  FMemo.SelStart:=FPos;
+  FMemo.SelLength := 1;
+  FMemo.SelText:='';
 end;
 
 end.

@@ -208,7 +208,7 @@ object Form1: TForm1
     Left = 200
     Top = 88
     Bitmap = {
-      494C0101040008005C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010104000800600010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -496,13 +496,6 @@ object Form1: TForm1
       ImageIndex = 0
       ShortCut = 16472
     end
-    object EditPaste1: TEditPaste
-      Category = #32232#38598
-      Caption = #36028#12426#20184#12369'(&P)'
-      Hint = #36028#12426#20184#12369'|'#12463#12522#12483#12503#12508#12540#12489#12398#20869#23481#12434#25407#20837#12375#12414#12377
-      ImageIndex = 2
-      ShortCut = 16470
-    end
     object EditSelectAll1: TEditSelectAll
       Category = #32232#38598
       Caption = #12377#12409#12390#36984#25246'(&A)'
@@ -528,6 +521,11 @@ object Form1: TForm1
       Caption = 'Undo'
       OnExecute = Action3Execute
     end
+    object Action4: TAction
+      Category = #32232#38598
+      Caption = 'Past'
+      OnExecute = Action4Execute
+    end
   end
   object PopupMenu1: TPopupMenu
     Left = 368
@@ -539,7 +537,7 @@ object Form1: TForm1
       Action = EditCut1
     end
     object P1: TMenuItem
-      Action = EditPaste1
+      Action = Action4
     end
     object A1: TMenuItem
       Action = EditSelectAll1
@@ -572,16 +570,13 @@ object Form1: TForm1
         Action = EditCut1
       end
       object P2: TMenuItem
-        Action = EditPaste1
+        Action = Action4
       end
       object A2: TMenuItem
         Action = EditSelectAll1
       end
       object U2: TMenuItem
-        Caption = #20803#12395#25147#12377'(&U)'
-        Hint = #20803#12395#25147#12377'|'#30452#21069#12398#25805#20316#12434#20803#12395#25147#12375#12414#12377
-        ImageIndex = 3
-        ShortCut = 16474
+        Action = Action3
       end
     end
     object N3: TMenuItem

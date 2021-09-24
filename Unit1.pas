@@ -25,7 +25,6 @@ type
     Memo2: TMemo;
     ActionList1: TActionList;
     PopupMenu1: TPopupMenu;
-    EditPaste1: TEditPaste;
     EditSelectAll1: TEditSelectAll;
     EditCut1: TEditCut;
     EditCopy1: TEditCopy;
@@ -60,6 +59,7 @@ type
     ToolButton10: TToolButton;
     Memo5: TMemo;
     Action3: TAction;
+    Action4: TAction;
     procedure ToolButton2Click(Sender: TObject);
     procedure ToolButton5Click(Sender: TObject);
     procedure TabControl1Change(Sender: TObject);
@@ -70,6 +70,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure Action3Execute(Sender: TObject);
     procedure Memo1KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure Action4Execute(Sender: TObject);
   private
     { Private êÈåæ }
     procedure loop(item: TTreeNode; JSON: TJSONObject);
@@ -97,6 +98,17 @@ var
 procedure TForm1.Action3Execute(Sender: TObject);
 begin
   Undo.Execute;
+end;
+
+procedure TForm1.Action4Execute(Sender: TObject);
+var
+  s: string;
+begin
+  s := Clipboard.AsText;
+  Memo1.SelText:=s;
+  Memo1.SelStart:=Memo1.SelStart-Length(s);
+  Memo1.SelLength:=Length(s);
+  Undo.Pasted(Memo1.SelText,Memo1.SelStart);
 end;
 
 procedure TForm1.arrloop(item: TTreeNode; arr: TJSONArray);
