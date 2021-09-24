@@ -2,7 +2,8 @@ program json_checker;
 
 uses
   Vcl.Forms,
-  Unit1 in 'Unit1.pas' {Form1};
+  Unit1 in 'Unit1.pas' {Form1},
+  Undo in 'Undo.pas';
 
 {$R *.res}
 

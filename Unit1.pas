@@ -27,7 +27,6 @@ type
     PopupMenu1: TPopupMenu;
     EditPaste1: TEditPaste;
     EditSelectAll1: TEditSelectAll;
-    EditUndo1: TEditUndo;
     EditCut1: TEditCut;
     EditCopy1: TEditCopy;
     C1: TMenuItem;
@@ -60,14 +59,19 @@ type
     ToolButton9: TToolButton;
     ToolButton10: TToolButton;
     Memo5: TMemo;
+    Action3: TAction;
     procedure ToolButton2Click(Sender: TObject);
     procedure ToolButton5Click(Sender: TObject);
     procedure TabControl1Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Memo1Change(Sender: TObject);
+    procedure Memo1KeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure Memo1KeyPress(Sender: TObject; var Key: Char);
+    procedure FormDestroy(Sender: TObject);
+    procedure Action3Execute(Sender: TObject);
+    procedure Memo1KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private êÈåæ }
-    id: TIndxChar;
     procedure loop(item: TTreeNode; JSON: TJSONObject);
     procedure arrloop(item: TTreeNode; arr: TJSONArray);
     function returnChar(c: TIndxChar): Char;
@@ -82,7 +86,18 @@ implementation
 
 {$R *.dfm}
 
-uses Clipbrd;
+uses Clipbrd, Undo;
+
+var
+  id: TIndxChar;
+  delstr: string;
+  delpos: integer;
+  Undo: TUndoClass;
+
+procedure TForm1.Action3Execute(Sender: TObject);
+begin
+  Undo.Execute;
+end;
 
 procedure TForm1.arrloop(item: TTreeNode; arr: TJSONArray);
 var
@@ -114,6 +129,13 @@ end;
 procedure TForm1.FormCreate(Sender: TObject);
 begin
   TabControl1Change(nil);
+  Undo := TUndoClass.Create(Self);
+  Undo.Memo := Memo1;
+end;
+
+procedure TForm1.FormDestroy(Sender: TObject);
+begin
+  Undo.Free;
 end;
 
 procedure TForm1.loop(item: TTreeNode; JSON: TJSONObject);
@@ -164,10 +186,58 @@ end;
 
 procedure TForm1.Memo1Change(Sender: TObject);
 begin
+  ToolButton8.Enabled := Undo.CanUndo;
   if Memo1.Text = '' then
   begin
     TreeView1.Items.Clear;
     TreeView1.Items.Add(nil, 'JSON items');
+  end;
+end;
+
+procedure TForm1.Memo1KeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if Memo1.Text <> '' then
+    case Key of
+      VK_DELETE:
+        if Memo1.SelLength = 0 then
+          delstr := Memo1.Text[Memo1.SelStart + 1]
+        else
+          delstr := Memo1.SelText;
+    end;
+end;
+
+procedure TForm1.Memo1KeyPress(Sender: TObject; var Key: Char);
+begin
+  case Ord(Key) of
+    VK_BACK:
+      if Memo1.SelStart > 0 then
+        if Memo1.SelLength = 0 then
+          delstr := Memo1.Text[Memo1.SelStart]
+        else
+          delstr := Memo1.SelText;
+  else
+    if Memo1.SelLength > 0 then
+      Undo.Deleted(Memo1.SelText, Memo1.SelStart, false);
+    Undo.Inputted(Key, Memo1.SelStart);
+    delpos := Memo1.SelStart + 1;
+  end;
+end;
+
+procedure TForm1.Memo1KeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+var
+  s: string;
+begin
+  case Key of
+    VK_BACK:
+      Undo.Deleted(delstr, Memo1.SelStart, false);
+    VK_DELETE:
+      Undo.Deleted(delstr, Memo1.SelStart, true);
+  end;
+  if Memo1.SelStart > delpos then
+  begin
+    s := Copy(Memo1.Text, delpos, Memo1.SelStart - delpos);
+    Undo.Pasted(s, delpos);
   end;
 end;
 

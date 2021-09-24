@@ -14,6 +14,7 @@ object Form1: TForm1
   OldCreateOrder = False
   ShowHint = True
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 28
   object Memo1: TMemo
@@ -25,6 +26,9 @@ object Form1: TForm1
     PopupMenu = PopupMenu1
     TabOrder = 0
     OnChange = Memo1Change
+    OnKeyDown = Memo1KeyDown
+    OnKeyPress = Memo1KeyPress
+    OnKeyUp = Memo1KeyUp
   end
   object ToolBar1: TToolBar
     Left = 0
@@ -65,19 +69,19 @@ object Form1: TForm1
       ImageIndex = 3
       Style = tbsSeparator
     end
-    object ToolButton10: TToolButton
+    object ToolButton8: TToolButton
       Left = 56
+      Top = 0
+      Action = Action3
+      ImageIndex = 2
+    end
+    object ToolButton10: TToolButton
+      Left = 79
       Top = 0
       Width = 8
       Caption = 'ToolButton10'
       ImageIndex = 4
       Style = tbsSeparator
-    end
-    object ToolButton8: TToolButton
-      Left = 64
-      Top = 0
-      Action = EditUndo1
-      ImageIndex = 2
     end
     object ToolButton4: TToolButton
       Left = 87
@@ -204,7 +208,7 @@ object Form1: TForm1
     Left = 200
     Top = 88
     Bitmap = {
-      494C010104000800580010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101040008005C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -505,13 +509,6 @@ object Form1: TForm1
       Hint = #12377#12409#12390#36984#25246'|'#12489#12461#12517#12513#12531#12488#20840#20307#12434#36984#25246#12375#12414#12377
       ShortCut = 16449
     end
-    object EditUndo1: TEditUndo
-      Category = #32232#38598
-      Caption = #20803#12395#25147#12377'(&U)'
-      Hint = #20803#12395#25147#12377'|'#30452#21069#12398#25805#20316#12434#20803#12395#25147#12375#12414#12377
-      ImageIndex = 3
-      ShortCut = 16474
-    end
     object Action1: TAction
       Caption = #23455#34892
       OnExecute = ToolButton2Click
@@ -525,6 +522,11 @@ object Form1: TForm1
       Caption = #32066#20102'(&X)'
       Hint = #32066#20102'|'#12450#12503#12522#12465#12540#12471#12519#12531#12434#32066#20102#12375#12414#12377
       ImageIndex = 43
+    end
+    object Action3: TAction
+      Category = #32232#38598
+      Caption = 'Undo'
+      OnExecute = Action3Execute
     end
   end
   object PopupMenu1: TPopupMenu
@@ -543,7 +545,7 @@ object Form1: TForm1
       Action = EditSelectAll1
     end
     object U1: TMenuItem
-      Action = EditUndo1
+      Action = Action3
     end
   end
   object MainMenu1: TMainMenu
@@ -576,7 +578,10 @@ object Form1: TForm1
         Action = EditSelectAll1
       end
       object U2: TMenuItem
-        Action = EditUndo1
+        Caption = #20803#12395#25147#12377'(&U)'
+        Hint = #20803#12395#25147#12377'|'#30452#21069#12398#25805#20316#12434#20803#12395#25147#12375#12414#12377
+        ImageIndex = 3
+        ShortCut = 16474
       end
     end
     object N3: TMenuItem
