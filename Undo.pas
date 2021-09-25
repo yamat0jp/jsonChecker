@@ -52,6 +52,8 @@ type
     FReStack: TObjectStack;
     FMemo: TCustomMemo;
     FCnt: integer;
+    FBack: integer;
+    FDel: integer;
     function GetCanUndo: Boolean;
     procedure Clear;
     procedure DelRedoStack;
@@ -67,7 +69,11 @@ type
     procedure ReDo;
     destructor Destroy; override;
     procedure UpCount;
+    procedure UpDelCnt;
+    procedure UpBackCnt;
     procedure ResetCnt;
+    procedure ResetDel;
+    procedure ResetBack;
   published
     property Memo: TCustomMemo read FMemo write SetMemo;
     property CanUndo: Boolean read GetCanUndo;
@@ -99,13 +105,44 @@ procedure TUndoClass.Deleted(const str: string; pos: integer; top: Boolean);
 var
   obj: TUnDelete;
 begin
+  if str = '' then
+    Exit;
   DelRedoStack;
-  obj := TUnDelete.Create;
-  obj.FStr := str;
-  obj.FPos := pos;
-  obj.FTop := top;
-  obj.FMemo := FMemo;
-  FStack.Push(obj);
+  if ((FBack > 0) or (FDel > 0)) and (FStack.Peek is TUnDelete) and
+    (Length(str) = 1) then
+  begin
+    obj := FStack.Peek as TUnDelete;
+    if top = obj.FTop then
+    begin
+      if top = true then
+      begin
+        obj.FStr := obj.FStr + str;
+        obj.FPos := obj.FPos;
+      end
+      else
+      begin
+        obj.FStr := str + obj.FStr;
+        obj.FPos := obj.FPos-1;
+      end;
+    end
+    else
+    begin
+      FBack := 0;
+      FDel := 0;
+      Deleted(str, pos, top);
+    end;
+  end
+  else
+  begin
+    FBack := 0;
+    FDel := 0;
+    obj := TUnDelete.Create;
+    obj.FStr := str;
+    obj.FPos := pos;
+    obj.FTop := top;
+    obj.FMemo := FMemo;
+    FStack.Push(obj);
+  end;
 end;
 
 procedure TUndoClass.DelRedoStack;
@@ -139,7 +176,7 @@ end;
 
 function TUndoClass.GetCanRedo: Boolean;
 begin
-  result:=FReStack.Count > 0;
+  result := FReStack.Count > 0;
 end;
 
 function TUndoClass.GetCanUndo: Boolean;
@@ -194,9 +231,19 @@ begin
   end;
 end;
 
+procedure TUndoClass.ResetBack;
+begin
+  FBack := 0;
+end;
+
 procedure TUndoClass.ResetCnt;
 begin
   FCnt := 0;
+end;
+
+procedure TUndoClass.ResetDel;
+begin
+  FDel := 0;
 end;
 
 procedure TUndoClass.Returned(pos: integer);
@@ -229,11 +276,25 @@ begin
   List.Free;
 end;
 
+procedure TUndoClass.UpBackCnt;
+begin
+  inc(FBack);
+  if FBack > 5 then
+    FBack := 0;
+end;
+
 procedure TUndoClass.UpCount;
 begin
   inc(FCnt);
   if FCnt > 5 then
     FCnt := 0;
+end;
+
+procedure TUndoClass.UpDelCnt;
+begin
+  inc(FDel);
+  if FDel > 5 then
+    FDel := 0;
 end;
 
 { TUnDelete }
@@ -253,7 +314,7 @@ begin
   else
   begin
     FMemo.SelLength := Length(FStr);
-    FMemo.SelStart := FPos + 1;
+    FMemo.SelStart := FPos + Length(FStr);
   end;
 end;
 

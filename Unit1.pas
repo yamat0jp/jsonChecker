@@ -117,7 +117,7 @@ begin
   Memo1.SelStart := Memo1.SelStart - Length(s);
   Memo1.SelLength := Length(s);
   Undo.Pasted(Memo1.SelText, Memo1.SelStart);
-  ToolButton8.Enabled:=Undo.CanUndo;
+  ToolButton8.Enabled := Undo.CanUndo;
 end;
 
 procedure TForm1.Action5Execute(Sender: TObject);
@@ -241,10 +241,15 @@ begin
   if Memo1.Text <> '' then
     case Key of
       VK_DELETE:
+      begin
         if Memo1.SelLength = 0 then
           delstr := Memo1.Text[Memo1.SelStart + 1]
         else
           delstr := Memo1.SelText;
+        Undo.ResetBack;
+        Undo.Deleted(delstr, Memo1.SelStart, true);
+        Undo.UpDelCnt;
+      end;
     end;
   charmodi := true;
 end;
@@ -254,10 +259,15 @@ begin
   case Ord(Key) of
     VK_BACK:
       if Memo1.SelStart > 0 then
+      begin
         if Memo1.SelLength = 0 then
           delstr := Memo1.Text[Memo1.SelStart]
         else
           delstr := Memo1.SelText;
+        Undo.ResetDel;
+        Undo.Deleted(delstr, Memo1.SelStart-1, false);
+        Undo.UpBackCnt;
+      end;
   else
     inputsub(Key);
   end;
@@ -265,12 +275,6 @@ end;
 
 procedure TForm1.Memo1KeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
-  case Key of
-    VK_BACK:
-      Undo.Deleted(delstr, Memo1.SelStart, false);
-    VK_DELETE:
-      Undo.Deleted(delstr, Memo1.SelStart, true);
-  end;
   if charmodi = true then
     Undo.ResetCnt;
   StatusBar1.Panels[1].Text := charmodi.ToString;
