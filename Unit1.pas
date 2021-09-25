@@ -242,7 +242,15 @@ begin
     case Key of
       VK_DELETE:
       begin
-        if Memo1.SelLength = 0 then
+        if Memo1.CaretPos.X = Length(Memo1.Lines[Memo1.CaretPos.Y]) then
+        begin
+          Undo.DelReturn(Memo1.SelStart,true);
+          Undo.ResetDel;
+          Undo.ResetBack;
+          charmodi := true;
+          Exit;
+        end
+        else if Memo1.SelLength = 0 then
           delstr := Memo1.Text[Memo1.SelStart + 1]
         else
           delstr := Memo1.SelText;
@@ -260,7 +268,15 @@ begin
     VK_BACK:
       if Memo1.SelStart > 0 then
       begin
-        if Memo1.SelLength = 0 then
+        if Memo1.CaretPos.X = 0 then
+        begin
+          Undo.DelReturn(Memo1.SelStart,false);
+          Undo.ResetDel;
+          Undo.ResetBack;
+          charmodi := true;
+          Exit;
+        end
+        else if Memo1.SelLength = 0 then
           delstr := Memo1.Text[Memo1.SelStart]
         else
           delstr := Memo1.SelText;
@@ -268,7 +284,11 @@ begin
         Undo.Deleted(delstr, Memo1.SelStart-1, false);
         Undo.UpBackCnt;
       end;
+    VK_DELETE:
+      ;
   else
+    Undo.ResetDel;
+    Undo.ResetBack;
     inputsub(Key);
   end;
 end;

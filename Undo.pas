@@ -14,14 +14,6 @@ type
     procedure ReDo; virtual; abstract;
   end;
 
-  TUnInput = class(TUndoBase)
-  private
-    FData: Char;
-  public
-    procedure Execute; override;
-    procedure ReDo; override;
-  end;
-
   TUnDelete = class(TUndoBase)
   private
     FStr: string;
@@ -46,6 +38,13 @@ type
     procedure ReDo; override;
   end;
 
+  TUnDelRet = class(TUndoBase)
+  private
+    FTop: Boolean;
+  public
+    procedure Execute; override;
+  end;
+
   TUndoClass = class(TComponent)
   private
     FStack: TObjectStack;
@@ -64,6 +63,7 @@ type
     procedure Deleted(const str: string; pos: integer; top: Boolean);
     procedure Inputted(c: Char; pos: integer);
     procedure Returned(pos: integer);
+    procedure DelReturn(num: integer; top: Boolean);
     procedure Pasted(const str: string; pos: integer);
     procedure Execute;
     procedure ReDo;
@@ -122,7 +122,7 @@ begin
       else
       begin
         obj.FStr := str + obj.FStr;
-        obj.FPos := obj.FPos-1;
+        obj.FPos := obj.FPos - 1;
       end;
     end
     else
@@ -152,6 +152,17 @@ begin
   if FReStack.Count > 0 then
     for i := 1 to FReStack.Count do
       FReStack.Pop.Free;
+end;
+
+procedure TUndoClass.DelReturn(num: integer; top: Boolean);
+var
+  obj: TUnDelRet;
+begin
+  obj := TUnDelRet.Create;
+  obj.FPos := num;
+  obj.FTop := top;
+  obj.FMemo := FMemo;
+  FStack.Push(obj);
 end;
 
 destructor TUndoClass.Destroy;
@@ -351,22 +362,6 @@ begin
   end;
 end;
 
-{ TUnInput }
-
-procedure TUnInput.Execute;
-begin
-  if FMemo <> nil then
-  begin
-    FMemo.SelStart := FPos;
-    FMemo.SelText := '';
-  end;
-end;
-
-procedure TUnInput.ReDo;
-begin
-
-end;
-
 { TUnRETURN }
 
 procedure TUnRETURN.Execute;
@@ -389,6 +384,19 @@ begin
   begin
     FMemo.SelStart := FPos;
     FMemo.SelText := #13#10;
+  end;
+end;
+
+{ TUnDelRet }
+
+procedure TUnDelRet.Execute;
+begin
+  if FMemo <> nil then
+  begin
+    FMemo.SelStart := FPos;
+    FMemo.SelText := #13#10;
+    if FTop = false then
+      FMemo.SelStart:=FMemo.SelStart+1;
   end;
 end;
 
