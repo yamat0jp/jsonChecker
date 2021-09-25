@@ -39,15 +39,18 @@ type
   private
     FStack: TObjectStack;
     FMemo: TCustomMemo;
+    FCnt: integer;
     function GetCanUndo: Boolean;
-    procedure Press;
+    procedure Clear;
   public
     constructor Create(AOwner: TComponent); override;
-    procedure Deleted(const str: string ; pos: integer; top: Boolean);
+    procedure Deleted(const str: string; pos: integer; top: Boolean);
     procedure Inputted(c: Char; pos: integer);
     procedure Pasted(const str: string; pos: integer);
     procedure Execute;
     destructor Destroy; override;
+    procedure UpCount;
+    procedure ResetCnt;
   published
     property Memo: TCustomMemo read FMemo write FMemo;
     property CanUndo: Boolean read GetCanUndo;
@@ -56,6 +59,14 @@ type
 implementation
 
 { TUndoClass }
+
+procedure TUndoClass.Clear;
+var
+  i: integer;
+begin
+  for i := 0 to FStack.Count - 1 do
+    FStack.Pop.Free;
+end;
 
 constructor TUndoClass.Create(AOwner: TComponent);
 begin
@@ -76,11 +87,8 @@ begin
 end;
 
 destructor TUndoClass.Destroy;
-var
-  i: integer;
 begin
-  for i := 0 to FStack.Count - 1 do
-    FStack.Pop;
+  Clear;
   FStack.Free;
   inherited;
 end;
@@ -93,6 +101,7 @@ begin
   begin
     obj := FStack.Pop as TUndoBase;
     obj.Execute;
+    obj.Free;
   end;
 end;
 
@@ -103,13 +112,21 @@ end;
 
 procedure TUndoClass.Inputted(c: Char; pos: integer);
 var
-  obj: TUnInput;
+  data: TUnPaste;
 begin
-  obj := TUnInput.Create;
-  obj.FData := c;
-  obj.FPos := pos;
-  obj.FMemo := FMemo;
-  FStack.Push(obj);
+  if (FCnt > 0) and (FStack.Count > 0) then
+  begin
+    data := FStack.Peek as TUnPaste;
+    data.FLen := data.FLen + 1;
+  end
+  else
+  begin
+    data := TUnPaste.Create;
+    data.FPos := pos;
+    data.FLen := 1;
+    data.FMemo := FMemo;
+    FStack.Push(data);
+  end;
 end;
 
 procedure TUndoClass.Pasted(const str: string; pos: integer);
@@ -123,9 +140,16 @@ begin
   FStack.Push(obj);
 end;
 
-procedure TUndoClass.Press;
+procedure TUndoClass.ResetCnt;
 begin
+  FCnt := 0;
+end;
 
+procedure TUndoClass.UpCount;
+begin
+  inc(FCnt);
+  if FCnt > 5 then
+    FCnt := 0;
 end;
 
 { TUnDelete }
@@ -139,8 +163,13 @@ begin
     FMemo.SelLength := Length(FStr);
   if FTop = true then
   begin
-    FMemo.SelStart := FPos;
     FMemo.SelLength := Length(FStr);
+    FMemo.SelStart := FPos;
+  end
+  else
+  begin
+    FMemo.SelLength := Length(FStr);
+    FMemo.SelStart := FPos + 1;
   end;
 end;
 
@@ -157,9 +186,8 @@ end;
 
 procedure TUnInput.Execute;
 begin
-  FMemo.SelStart:=FPos;
-  FMemo.SelLength := 1;
-  FMemo.SelText:='';
+  FMemo.SelStart := FPos;
+  FMemo.SelText := '';
 end;
 
 end.

@@ -93,6 +93,7 @@ var
   id: TIndxChar;
   delstr: string;
   delpos: integer;
+  charmodi: Boolean;
   Undo: TUndoClass;
 
 procedure TForm1.Action3Execute(Sender: TObject);
@@ -217,6 +218,7 @@ begin
         else
           delstr := Memo1.SelText;
     end;
+  charmodi := true;
 end;
 
 procedure TForm1.Memo1KeyPress(Sender: TObject; var Key: Char);
@@ -231,16 +233,13 @@ begin
     VK_RETURN:
       ;
   else
-    if Memo1.SelLength > 0 then
-      Undo.Deleted(Memo1.SelText, Memo1.SelStart, false);
-    Undo.Inputted(Key, Memo1.SelStart);
-    delpos := Memo1.SelStart + 1;
+    delstr := Memo1.SelText;
+    delpos := Memo1.SelStart;
+    charmodi := false;
   end;
 end;
 
 procedure TForm1.Memo1KeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
-var
-  s: string;
 begin
   case Key of
     VK_BACK:
@@ -248,11 +247,16 @@ begin
     VK_DELETE:
       Undo.Deleted(delstr, Memo1.SelStart, true);
   end;
-  if Memo1.SelStart > delpos then
+  if charmodi = true then
+    Undo.ResetCnt
+  else if delstr <> '' then
+    Undo.Deleted(delstr, Memo1.SelStart, false)
+  else
   begin
-    s := Copy(Memo1.Text, delpos, Memo1.SelStart - delpos);
-    Undo.Pasted(s, delpos);
+    Undo.Inputted(Memo1.Text[delpos], delpos);
+    Undo.UpCount;
   end;
+  StatusBar1.Panels[1].Text:=charmodi.ToString;
 end;
 
 function TForm1.returnChar(c: TIndxChar): Char;
