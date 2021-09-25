@@ -105,6 +105,7 @@ var
 procedure TForm1.Action3Execute(Sender: TObject);
 begin
   Undo.Execute;
+  ToolButton11.Enabled := Undo.CanRedo;
 end;
 
 procedure TForm1.Action4Execute(Sender: TObject);
@@ -121,6 +122,7 @@ end;
 procedure TForm1.Action5Execute(Sender: TObject);
 begin
   Undo.ReDo;
+  ToolButton11.Enabled := Undo.CanRedo;
 end;
 
 procedure TForm1.arrloop(item: TTreeNode; arr: TJSONArray);
@@ -164,16 +166,16 @@ end;
 
 procedure TForm1.inputsub(Key: Char);
 begin
-    delstr := Memo1.SelText;
-    delpos := Memo1.SelStart;
-    charmodi := false;
-    if delstr <> '' then
-      Undo.Deleted(delstr, Memo1.SelStart, false);
-    if Key = Char(VK_RETURN) then
-      Undo.Returned(delpos)
-    else
-      Undo.Inputted(Key, delpos);
-    Undo.UpCount;
+  delstr := Memo1.SelText;
+  delpos := Memo1.SelStart;
+  charmodi := false;
+  if delstr <> '' then
+    Undo.Deleted(delstr, Memo1.SelStart, false);
+  if Key = Char(VK_RETURN) then
+    Undo.Returned(delpos)
+  else
+    Undo.Inputted(Key, delpos);
+  Undo.UpCount;
 end;
 
 procedure TForm1.loop(item: TTreeNode; JSON: TJSONObject);

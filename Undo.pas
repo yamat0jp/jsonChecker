@@ -56,6 +56,7 @@ type
     procedure Clear;
     procedure DelRedoStack;
     procedure SetMemo(const Value: TCustomMemo);
+    function GetCanRedo: Boolean;
   public
     constructor Create(AOwner: TComponent); override;
     procedure Deleted(const str: string; pos: integer; top: Boolean);
@@ -70,6 +71,7 @@ type
   published
     property Memo: TCustomMemo read FMemo write SetMemo;
     property CanUndo: Boolean read GetCanUndo;
+    property CanRedo: Boolean read GetCanRedo;
   end;
 
 implementation
@@ -133,6 +135,11 @@ begin
     obj.Execute;
     FReStack.Push(obj);
   end;
+end;
+
+function TUndoClass.GetCanRedo: Boolean;
+begin
+  result:=FReStack.Count > 0;
 end;
 
 function TUndoClass.GetCanUndo: Boolean;
