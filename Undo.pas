@@ -177,6 +177,7 @@ begin
   obj := TUnPaste.Create;
   obj.FPos := pos;
   obj.FLen := Length(str);
+  obj.FStr := str;
   obj.FMemo := FMemo;
   FStack.Push(obj);
 end;

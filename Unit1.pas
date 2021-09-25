@@ -117,6 +117,7 @@ begin
   Memo1.SelStart := Memo1.SelStart - Length(s);
   Memo1.SelLength := Length(s);
   Undo.Pasted(Memo1.SelText, Memo1.SelStart);
+  ToolButton8.Enabled:=Undo.CanUndo;
 end;
 
 procedure TForm1.Action5Execute(Sender: TObject);
