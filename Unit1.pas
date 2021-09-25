@@ -299,6 +299,12 @@ begin
     Undo.ResetBack;
     inputsub(Key);
   end;
+  if Key = '.' then
+  begin
+    Undo.ResetDel;
+    Undo.ResetBack;
+    inputsub(Key);
+  end;
 end;
 
 procedure TForm1.Memo1KeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
