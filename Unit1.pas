@@ -76,6 +76,7 @@ type
     procedure loop(item: TTreeNode; JSON: TJSONObject);
     procedure arrloop(item: TTreeNode; arr: TJSONArray);
     function returnChar(c: TIndxChar): Char;
+    procedure inputsub(Key: Char);
   public
     { Public êÈåæ }
   end;
@@ -149,6 +150,20 @@ end;
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
   Undo.Free;
+end;
+
+procedure TForm1.inputsub(Key: Char);
+begin
+    delstr := Memo1.SelText;
+    delpos := Memo1.SelStart;
+    charmodi := false;
+    if delstr <> '' then
+      Undo.Deleted(delstr, Memo1.SelStart, false);
+    if Key = Char(VK_RETURN) then
+      Undo.Returned(delpos)
+    else
+      Undo.Inputted(Key, delpos);
+    Undo.UpCount;
 end;
 
 procedure TForm1.loop(item: TTreeNode; JSON: TJSONObject);
@@ -230,16 +245,8 @@ begin
           delstr := Memo1.Text[Memo1.SelStart]
         else
           delstr := Memo1.SelText;
-    VK_RETURN:
-      ;
   else
-    delstr := Memo1.SelText;
-    delpos := Memo1.SelStart;
-    charmodi := false;
-    if delstr <> '' then
-      Undo.Deleted(delstr, Memo1.SelStart, false);
-    Undo.Inputted(Key, delpos);
-    Undo.UpCount;
+    inputsub(Key);
   end;
 end;
 
