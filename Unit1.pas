@@ -305,7 +305,6 @@ procedure TForm1.Memo1KeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
   if charmodi = true then
     Undo.ResetCnt;
-  StatusBar1.Panels[1].Text := charmodi.ToString;
 end;
 
 function TForm1.returnChar(c: TIndxChar): Char;

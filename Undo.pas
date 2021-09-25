@@ -43,9 +43,12 @@ type
     FTop: Boolean;
   public
     procedure Execute; override;
+    procedure ReDo; override;
   end;
 
   TUndoClass = class(TComponent)
+  const
+    Max = 5;
   private
     FStack: TObjectStack;
     FReStack: TObjectStack;
@@ -290,21 +293,21 @@ end;
 procedure TUndoClass.UpBackCnt;
 begin
   inc(FBack);
-  if FBack > 5 then
+  if FBack > Max then
     FBack := 0;
 end;
 
 procedure TUndoClass.UpCount;
 begin
   inc(FCnt);
-  if FCnt > 5 then
+  if FCnt > Max then
     FCnt := 0;
 end;
 
 procedure TUndoClass.UpDelCnt;
 begin
   inc(FDel);
-  if FDel > 5 then
+  if FDel > Max then
     FDel := 0;
 end;
 
@@ -396,7 +399,20 @@ begin
     FMemo.SelStart := FPos;
     FMemo.SelText := #13#10;
     if FTop = false then
-      FMemo.SelStart:=FMemo.SelStart+1;
+      FMemo.SelStart := FMemo.SelStart + 1;
+  end;
+end;
+
+procedure TUnDelRet.ReDo;
+var
+  i: integer;
+begin
+  if FMemo <> nil then
+  begin
+    FMemo.SelStart := FPos;
+    i := FMemo.CaretPos.Y;
+    FMemo.Lines[i] := FMemo.Lines[i] + FMemo.Lines[i + 1];
+    FMemo.Lines.Delete(i + 1);
   end;
 end;
 
