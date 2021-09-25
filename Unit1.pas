@@ -60,6 +60,10 @@ type
     Memo5: TMemo;
     Action3: TAction;
     Action4: TAction;
+    Action5: TAction;
+    ReDo1: TMenuItem;
+    ReDo2: TMenuItem;
+    ToolButton11: TToolButton;
     procedure ToolButton2Click(Sender: TObject);
     procedure ToolButton5Click(Sender: TObject);
     procedure TabControl1Change(Sender: TObject);
@@ -71,6 +75,7 @@ type
     procedure Action3Execute(Sender: TObject);
     procedure Memo1KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure Action4Execute(Sender: TObject);
+    procedure Action5Execute(Sender: TObject);
   private
     { Private êÈåæ }
     procedure loop(item: TTreeNode; JSON: TJSONObject);
@@ -111,6 +116,11 @@ begin
   Memo1.SelStart := Memo1.SelStart - Length(s);
   Memo1.SelLength := Length(s);
   Undo.Pasted(Memo1.SelText, Memo1.SelStart);
+end;
+
+procedure TForm1.Action5Execute(Sender: TObject);
+begin
+  Undo.ReDo;
 end;
 
 procedure TForm1.arrloop(item: TTreeNode; arr: TJSONArray);
