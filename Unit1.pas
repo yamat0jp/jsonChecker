@@ -78,6 +78,7 @@ type
     procedure Action5Execute(Sender: TObject);
   private
     { Private êÈåæ }
+    function checkplane: Boolean;
     procedure loop(item: TTreeNode; JSON: TJSONObject);
     procedure arrloop(item: TTreeNode; arr: TJSONArray);
     function returnChar(c: TIndxChar): Char;
@@ -105,6 +106,7 @@ var
 procedure TForm1.Action3Execute(Sender: TObject);
 begin
   Undo.Execute;
+  ToolButton8.Enabled := Undo.CanUndo;
   ToolButton11.Enabled := Undo.CanRedo;
 end;
 
@@ -123,6 +125,7 @@ end;
 procedure TForm1.Action5Execute(Sender: TObject);
 begin
   Undo.ReDo;
+  ToolButton8.Enabled := Undo.CanUndo;
   ToolButton11.Enabled := Undo.CanRedo;
 end;
 
@@ -151,6 +154,28 @@ begin
       TreeView1.Items.AddChild(item, s);
     end;
   end;
+end;
+
+function TForm1.checkplane: Boolean;
+var
+  i: integer;
+  s: string;
+  j: integer;
+begin
+  result := true;
+  if Memo1.Text <> '' then
+    for i := 0 to Memo1.Lines.count - 1 do
+    begin
+      s := Memo1.Lines[i];
+      for j := 1 to Length(s) do
+        case s[j] of
+          Char(VK_SPACE), Char(VK_TAB), 'Å@':
+            continue;
+        else
+          result := false;
+          break;
+        end;
+    end;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
@@ -241,23 +266,23 @@ begin
   if Memo1.Text <> '' then
     case Key of
       VK_DELETE:
-      begin
-        if Memo1.CaretPos.X = Length(Memo1.Lines[Memo1.CaretPos.Y]) then
         begin
-          Undo.DelReturn(Memo1.SelStart,true);
-          Undo.ResetDel;
+          if Memo1.CaretPos.X = Length(Memo1.Lines[Memo1.CaretPos.Y]) then
+          begin
+            Undo.DelReturn(Memo1.SelStart, true);
+            Undo.ResetDel;
+            Undo.ResetBack;
+            charmodi := true;
+            Exit;
+          end
+          else if Memo1.SelLength = 0 then
+            delstr := Memo1.Text[Memo1.SelStart + 1]
+          else
+            delstr := Memo1.SelText;
           Undo.ResetBack;
-          charmodi := true;
-          Exit;
-        end
-        else if Memo1.SelLength = 0 then
-          delstr := Memo1.Text[Memo1.SelStart + 1]
-        else
-          delstr := Memo1.SelText;
-        Undo.ResetBack;
-        Undo.Deleted(delstr, Memo1.SelStart, true);
-        Undo.UpDelCnt;
-      end;
+          Undo.Deleted(delstr, Memo1.SelStart, true);
+          Undo.UpDelCnt;
+        end;
     end;
   charmodi := true;
 end;
@@ -272,7 +297,7 @@ begin
       begin
         if Memo1.CaretPos.X = 0 then
         begin
-          Undo.DelReturn(Memo1.SelStart,false);
+          Undo.DelReturn(Memo1.SelStart, false);
           Undo.ResetDel;
           Undo.ResetBack;
           charmodi := true;
@@ -281,12 +306,12 @@ begin
         else if Memo1.SelLength = 0 then
         begin
           delstr := Memo1.Text[Memo1.SelStart];
-          i:=Memo1.SelStart-1;
+          i := Memo1.SelStart - 1;
         end
         else
         begin
           delstr := Memo1.SelText;
-          i:=Memo1.SelStart;
+          i := Memo1.SelStart;
         end;
         Undo.ResetDel;
         Undo.Deleted(delstr, i, false);
@@ -353,19 +378,25 @@ var
 begin
   id := Low(id);
   TreeView1.Items.Clear;
-  if Memo1.Text = '' then
-    Memo1.Text := Clipboard.AsText;
+  if checkplane = true then
+  begin
+    Memo1.Text := '';
+    Action4Execute(nil);
+    Memo1.SelLength := 0;
+  end;
   j := TJSONObject.ParseJSONValue(Memo1.Text) as TJSONObject;
   if j <> nil then
-    loop(nil, j);
-  for i := 0 to TreeView1.Items.count - 1 do
-    TreeView1.Items[i].Expanded := true;
-  if TreeView1.Items.count = 0 then
-    StatusBar1.Panels[0].Text := 'error'
-  else
   begin
-    Clipboard.AsText := j.ToString;
-    StatusBar1.Panels[0].Text := '';
+    loop(nil, j);
+    for i := 0 to TreeView1.Items.count - 1 do
+      TreeView1.Items[i].Expanded := true;
+    if TreeView1.Items.count = 0 then
+      StatusBar1.Panels[0].Text := 'error'
+    else
+    begin
+      Clipboard.AsText := j.ToString;
+      StatusBar1.Panels[0].Text := '';
+    end;
   end;
 end;
 

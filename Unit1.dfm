@@ -25,6 +25,7 @@ object Form1: TForm1
     Align = alClient
     PopupMenu = PopupMenu1
     TabOrder = 0
+    WantTabs = True
     OnChange = Memo1Change
     OnKeyDown = Memo1KeyDown
     OnKeyPress = Memo1KeyPress
@@ -56,7 +57,7 @@ object Form1: TForm1
     object ToolButton2: TToolButton
       Left = 25
       Top = 0
-      Hint = 'Exequte'
+      Hint = 'Execute'
       Caption = 'ToolButton2'
       ImageIndex = 0
       OnClick = ToolButton2Click
@@ -73,6 +74,7 @@ object Form1: TForm1
       Left = 56
       Top = 0
       Action = Action3
+      Enabled = False
       ImageIndex = 4
     end
     object ToolButton10: TToolButton
@@ -133,6 +135,7 @@ object Form1: TForm1
     Indent = 19
     ReadOnly = True
     TabOrder = 2
+    TabStop = False
     Items.NodeData = {
       0301000000320000000000000000000000FFFFFFFFFFFFFFFF00000000000000
       0000000000010A4A0053004F004E0020006900740065006D007300}
@@ -166,6 +169,7 @@ object Form1: TForm1
       Top = 39
       Width = 892
       Height = 108
+      TabStop = False
       Align = alClient
       Lines.Strings = (
         '')
@@ -217,7 +221,7 @@ object Form1: TForm1
     Left = 200
     Top = 88
     Bitmap = {
-      494C0101060008008C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010106000800940010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -512,7 +516,9 @@ object Form1: TForm1
       ShortCut = 16449
     end
     object Action1: TAction
+      Category = #12501#12449#12452#12523
       Caption = #23455#34892
+      ShortCut = 16453
       OnExecute = ToolButton2Click
     end
     object Action2: TAction
@@ -524,6 +530,7 @@ object Form1: TForm1
       Caption = #32066#20102'(&X)'
       Hint = #32066#20102'|'#12450#12503#12522#12465#12540#12471#12519#12531#12434#32066#20102#12375#12414#12377
       ImageIndex = 43
+      ShortCut = 16465
     end
     object Action3: TAction
       Category = #32232#38598
@@ -540,6 +547,7 @@ object Form1: TForm1
     object Action5: TAction
       Category = #32232#38598
       Caption = 'ReDo'
+      ShortCut = 16466
       OnExecute = Action5Execute
     end
   end
