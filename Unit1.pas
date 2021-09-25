@@ -263,6 +263,8 @@ begin
 end;
 
 procedure TForm1.Memo1KeyPress(Sender: TObject; var Key: Char);
+var
+  i: integer;
 begin
   case Ord(Key) of
     VK_BACK:
@@ -277,11 +279,17 @@ begin
           Exit;
         end
         else if Memo1.SelLength = 0 then
-          delstr := Memo1.Text[Memo1.SelStart]
+        begin
+          delstr := Memo1.Text[Memo1.SelStart];
+          i:=Memo1.SelStart-1;
+        end
         else
+        begin
           delstr := Memo1.SelText;
+          i:=Memo1.SelStart;
+        end;
         Undo.ResetDel;
-        Undo.Deleted(delstr, Memo1.SelStart-1, false);
+        Undo.Deleted(delstr, i, false);
         Undo.UpBackCnt;
       end;
     VK_DELETE:
