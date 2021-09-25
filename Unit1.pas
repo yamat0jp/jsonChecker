@@ -236,6 +236,10 @@ begin
     delstr := Memo1.SelText;
     delpos := Memo1.SelStart;
     charmodi := false;
+    if delstr <> '' then
+      Undo.Deleted(delstr, Memo1.SelStart, false);
+    Undo.Inputted(Key, delpos);
+    Undo.UpCount;
   end;
 end;
 
@@ -248,15 +252,8 @@ begin
       Undo.Deleted(delstr, Memo1.SelStart, true);
   end;
   if charmodi = true then
-    Undo.ResetCnt
-  else if delstr <> '' then
-    Undo.Deleted(delstr, Memo1.SelStart, false)
-  else
-  begin
-    Undo.Inputted(Memo1.Text[delpos], delpos);
-    Undo.UpCount;
-  end;
-  StatusBar1.Panels[1].Text:=charmodi.ToString;
+    Undo.ResetCnt;
+  StatusBar1.Panels[1].Text := charmodi.ToString;
 end;
 
 function TForm1.returnChar(c: TIndxChar): Char;

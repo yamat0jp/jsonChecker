@@ -187,6 +187,7 @@ object Form1: TForm1
       Width = 185
       Height = 89
       Lines.Strings = (
+        #12450#12531#12489#12453#12434#28145#12367#32368#12426#36820#12379#12427
         #22806#35251#12434#22793#26356
         'TJSONArray '#12395#23550#24540#12375#12414#12375#12383' '
         ' --------------------'
@@ -522,6 +523,7 @@ object Form1: TForm1
     object Action3: TAction
       Category = #32232#38598
       Caption = 'Undo'
+      ShortCut = 16474
       OnExecute = Action3Execute
     end
     object Action4: TAction
