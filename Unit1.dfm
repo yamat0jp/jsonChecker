@@ -73,6 +73,7 @@ object Form1: TForm1
     object ToolButton8: TToolButton
       Left = 56
       Top = 0
+      Hint = 'Undo'
       Action = Action3
       Enabled = False
       ImageIndex = 4
@@ -88,6 +89,7 @@ object Form1: TForm1
     object ToolButton11: TToolButton
       Left = 87
       Top = 0
+      Hint = 'Redo'
       Action = Action5
       Enabled = False
       ImageIndex = 1
@@ -221,7 +223,7 @@ object Form1: TForm1
     Left = 200
     Top = 88
     Bitmap = {
-      494C010106000800940010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010106000800980010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

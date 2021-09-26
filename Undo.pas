@@ -47,9 +47,8 @@ type
   end;
 
   TUndoClass = class(TComponent)
-  const
-    Max = 5;
   private
+    FMax: integer;
     FStack: TObjectStack;
     FReStack: TObjectStack;
     FMemo: TCustomMemo;
@@ -81,6 +80,7 @@ type
     property Memo: TCustomMemo read FMemo write SetMemo;
     property CanUndo: Boolean read GetCanUndo;
     property CanRedo: Boolean read GetCanRedo;
+    property Max: integer read FMax write FMax;
   end;
 
 implementation
@@ -100,6 +100,7 @@ end;
 constructor TUndoClass.Create(AOwner: TComponent);
 begin
   inherited;
+  FMax := 5;
   FStack := TObjectStack.Create;
   FReStack := TObjectStack.Create;
 end;
