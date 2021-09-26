@@ -60,8 +60,8 @@ type
     Memo5: TMemo;
     Undo1: TAction;
     Past1: TAction;
-    Redo: TAction;
-    ReDo1: TMenuItem;
+    Redo1: TAction;
+    R1: TMenuItem;
     R2: TMenuItem;
     ToolButton11: TToolButton;
     procedure ToolButton5Click(Sender: TObject);
@@ -74,7 +74,7 @@ type
     procedure Undo1Execute(Sender: TObject);
     procedure Memo1KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure Past1Execute(Sender: TObject);
-    procedure RedoExecute(Sender: TObject);
+    procedure Redo1Execute(Sender: TObject);
     procedure Execute1Execute(Sender: TObject);
   private
     { Private êÈåæ }
@@ -122,7 +122,7 @@ begin
   ToolButton8.Enabled := Undo.CanUndo;
 end;
 
-procedure TForm1.RedoExecute(Sender: TObject);
+procedure TForm1.Redo1Execute(Sender: TObject);
 begin
   Undo.ReDo;
   ToolButton8.Enabled := Undo.CanUndo;

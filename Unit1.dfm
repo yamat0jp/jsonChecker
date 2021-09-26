@@ -87,7 +87,7 @@ object Form1: TForm1
     object ToolButton11: TToolButton
       Left = 87
       Top = 0
-      Action = Redo
+      Action = Redo1
       Enabled = False
       ImageIndex = 1
     end
@@ -110,10 +110,8 @@ object Form1: TForm1
     object ToolButton5: TToolButton
       Left = 151
       Top = 0
-      Hint = 'Help'
-      Caption = 'ToolButton5'
+      Action = Hint1
       ImageIndex = 3
-      OnClick = ToolButton5Click
     end
     object ToolButton7: TToolButton
       Left = 174
@@ -220,7 +218,7 @@ object Form1: TForm1
     Left = 200
     Top = 88
     Bitmap = {
-      494C010106000800A00010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010106000800A40010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -548,12 +546,12 @@ object Form1: TForm1
       ShortCut = 16470
       OnExecute = Past1Execute
     end
-    object Redo: TAction
+    object Redo1: TAction
       Category = #32232#38598
       Caption = 'ReDo'
       Hint = 'Redo'
       ShortCut = 16466
-      OnExecute = RedoExecute
+      OnExecute = Redo1Execute
     end
   end
   object PopupMenu1: TPopupMenu
@@ -574,8 +572,8 @@ object Form1: TForm1
     object U1: TMenuItem
       Action = Undo1
     end
-    object ReDo1: TMenuItem
-      Action = Redo
+    object R1: TMenuItem
+      Action = Redo1
     end
   end
   object MainMenu1: TMainMenu
@@ -611,7 +609,7 @@ object Form1: TForm1
         Action = Undo1
       end
       object R2: TMenuItem
-        Action = Redo
+        Action = Redo1
       end
     end
     object N3: TMenuItem
