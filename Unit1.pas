@@ -34,8 +34,8 @@ type
     A1: TMenuItem;
     U1: TMenuItem;
     MainMenu1: TMainMenu;
-    Action1: TAction;
-    Action2: TAction;
+    Execute1: TAction;
+    Hint1: TAction;
     TabControl1: TTabControl;
     Memo3: TMemo;
     Memo4: TMemo;
@@ -58,13 +58,12 @@ type
     ToolButton9: TToolButton;
     ToolButton10: TToolButton;
     Memo5: TMemo;
-    Action3: TAction;
-    Action4: TAction;
-    Action5: TAction;
+    Undo1: TAction;
+    Past1: TAction;
+    Redo: TAction;
     ReDo1: TMenuItem;
-    ReDo2: TMenuItem;
+    R2: TMenuItem;
     ToolButton11: TToolButton;
-    procedure ToolButton2Click(Sender: TObject);
     procedure ToolButton5Click(Sender: TObject);
     procedure TabControl1Change(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -72,10 +71,11 @@ type
     procedure Memo1KeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure Memo1KeyPress(Sender: TObject; var Key: Char);
     procedure FormDestroy(Sender: TObject);
-    procedure Action3Execute(Sender: TObject);
+    procedure Undo1Execute(Sender: TObject);
     procedure Memo1KeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure Action4Execute(Sender: TObject);
-    procedure Action5Execute(Sender: TObject);
+    procedure Past1Execute(Sender: TObject);
+    procedure RedoExecute(Sender: TObject);
+    procedure Execute1Execute(Sender: TObject);
   private
     { Private êÈåæ }
     function checkplane: Boolean;
@@ -103,14 +103,14 @@ var
   charmodi: Boolean;
   Undo: TUndoClass;
 
-procedure TForm1.Action3Execute(Sender: TObject);
+procedure TForm1.Undo1Execute(Sender: TObject);
 begin
   Undo.Execute;
   ToolButton8.Enabled := Undo.CanUndo;
   ToolButton11.Enabled := Undo.CanRedo;
 end;
 
-procedure TForm1.Action4Execute(Sender: TObject);
+procedure TForm1.Past1Execute(Sender: TObject);
 var
   s: string;
 begin
@@ -122,7 +122,7 @@ begin
   ToolButton8.Enabled := Undo.CanUndo;
 end;
 
-procedure TForm1.Action5Execute(Sender: TObject);
+procedure TForm1.RedoExecute(Sender: TObject);
 begin
   Undo.ReDo;
   ToolButton8.Enabled := Undo.CanUndo;
@@ -176,6 +176,35 @@ begin
           break;
         end;
     end;
+end;
+
+procedure TForm1.Execute1Execute(Sender: TObject);
+var
+  i: integer;
+  j: TJSONObject;
+begin
+  id := Low(id);
+  TreeView1.Items.Clear;
+  if checkplane = true then
+  begin
+    Memo1.Text := '';
+    Past1Execute(nil);
+    Memo1.SelLength := 0;
+  end;
+  j := TJSONObject.ParseJSONValue(Memo1.Text) as TJSONObject;
+  if j <> nil then
+  begin
+    loop(nil, j);
+    for i := 0 to TreeView1.Items.count - 1 do
+      TreeView1.Items[i].Expanded := true;
+    if TreeView1.Items.count = 0 then
+      StatusBar1.Panels[0].Text := 'error'
+    else
+    begin
+      Clipboard.AsText := j.ToString;
+      StatusBar1.Panels[0].Text := '';
+    end;
+  end;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
@@ -291,40 +320,34 @@ procedure TForm1.Memo1KeyPress(Sender: TObject; var Key: Char);
 var
   i: integer;
 begin
-  case Ord(Key) of
-    VK_BACK:
-      if Memo1.SelStart > 0 then
+  if Ord(Key) = VK_BACK then
+  begin
+    if Memo1.SelStart > 0 then
+    begin
+      if Memo1.CaretPos.X = 0 then
       begin
-        if Memo1.CaretPos.X = 0 then
-        begin
-          Undo.DelReturn(Memo1.SelStart, false);
-          Undo.ResetDel;
-          Undo.ResetBack;
-          charmodi := true;
-          Exit;
-        end
-        else if Memo1.SelLength = 0 then
-        begin
-          delstr := Memo1.Text[Memo1.SelStart];
-          i := Memo1.SelStart - 1;
-        end
-        else
-        begin
-          delstr := Memo1.SelText;
-          i := Memo1.SelStart;
-        end;
+        Undo.DelReturn(Memo1.SelStart, false);
         Undo.ResetDel;
-        Undo.Deleted(delstr, i, false);
-        Undo.UpBackCnt;
+        Undo.ResetBack;
+        charmodi := true;
+        Exit;
+      end
+      else if Memo1.SelLength = 0 then
+      begin
+        delstr := Memo1.Text[Memo1.SelStart];
+        i := Memo1.SelStart - 1;
+      end
+      else
+      begin
+        delstr := Memo1.SelText;
+        i := Memo1.SelStart;
       end;
-    VK_DELETE:
-      ;
+      Undo.ResetDel;
+      Undo.Deleted(delstr, i, false);
+      Undo.UpBackCnt;
+    end;
+  end
   else
-    Undo.ResetDel;
-    Undo.ResetBack;
-    inputsub(Key);
-  end;
-  if Key = '.' then
   begin
     Undo.ResetDel;
     Undo.ResetBack;
@@ -368,35 +391,6 @@ begin
       Memo2.Text := Memo4.Text;
     2:
       Memo2.Text := Memo5.Text;
-  end;
-end;
-
-procedure TForm1.ToolButton2Click(Sender: TObject);
-var
-  i: integer;
-  j: TJSONObject;
-begin
-  id := Low(id);
-  TreeView1.Items.Clear;
-  if checkplane = true then
-  begin
-    Memo1.Text := '';
-    Action4Execute(nil);
-    Memo1.SelLength := 0;
-  end;
-  j := TJSONObject.ParseJSONValue(Memo1.Text) as TJSONObject;
-  if j <> nil then
-  begin
-    loop(nil, j);
-    for i := 0 to TreeView1.Items.count - 1 do
-      TreeView1.Items[i].Expanded := true;
-    if TreeView1.Items.count = 0 then
-      StatusBar1.Panels[0].Text := 'error'
-    else
-    begin
-      Clipboard.AsText := j.ToString;
-      StatusBar1.Panels[0].Text := '';
-    end;
   end;
 end;
 

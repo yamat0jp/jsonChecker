@@ -24,6 +24,7 @@ object Form1: TForm1
     Height = 287
     Align = alClient
     PopupMenu = PopupMenu1
+    ScrollBars = ssVertical
     TabOrder = 0
     WantTabs = True
     OnChange = Memo1Change
@@ -57,10 +58,8 @@ object Form1: TForm1
     object ToolButton2: TToolButton
       Left = 25
       Top = 0
-      Hint = 'Execute'
-      Caption = 'ToolButton2'
+      Action = Execute1
       ImageIndex = 0
-      OnClick = ToolButton2Click
     end
     object ToolButton9: TToolButton
       Left = 48
@@ -73,8 +72,7 @@ object Form1: TForm1
     object ToolButton8: TToolButton
       Left = 56
       Top = 0
-      Hint = 'Undo'
-      Action = Action3
+      Action = Undo1
       Enabled = False
       ImageIndex = 4
     end
@@ -89,8 +87,7 @@ object Form1: TForm1
     object ToolButton11: TToolButton
       Left = 87
       Top = 0
-      Hint = 'Redo'
-      Action = Action5
+      Action = Redo
       Enabled = False
       ImageIndex = 1
     end
@@ -223,7 +220,7 @@ object Form1: TForm1
     Left = 200
     Top = 88
     Bitmap = {
-      494C010106000800980010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010106000800A00010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -517,14 +514,17 @@ object Form1: TForm1
       Hint = #12377#12409#12390#36984#25246'|'#12489#12461#12517#12513#12531#12488#20840#20307#12434#36984#25246#12375#12414#12377
       ShortCut = 16449
     end
-    object Action1: TAction
+    object Execute1: TAction
       Category = #12501#12449#12452#12523
       Caption = #23455#34892
+      Hint = 'Execute'
       ShortCut = 16453
-      OnExecute = ToolButton2Click
+      OnExecute = Execute1Execute
     end
-    object Action2: TAction
-      Caption = #12504#12523#12503
+    object Hint1: TAction
+      Caption = 'Help'
+      Hint = 'Hint'
+      ShortCut = 16456
       OnExecute = ToolButton5Click
     end
     object FileExit1: TFileExit
@@ -534,23 +534,26 @@ object Form1: TForm1
       ImageIndex = 43
       ShortCut = 16465
     end
-    object Action3: TAction
+    object Undo1: TAction
       Category = #32232#38598
       Caption = 'Undo'
+      Hint = 'Undo'
       ShortCut = 16474
-      OnExecute = Action3Execute
+      OnExecute = Undo1Execute
     end
-    object Action4: TAction
+    object Past1: TAction
       Category = #32232#38598
       Caption = 'Past'
+      Hint = 'Past'
       ShortCut = 16470
-      OnExecute = Action4Execute
+      OnExecute = Past1Execute
     end
-    object Action5: TAction
+    object Redo: TAction
       Category = #32232#38598
       Caption = 'ReDo'
+      Hint = 'Redo'
       ShortCut = 16466
-      OnExecute = Action5Execute
+      OnExecute = RedoExecute
     end
   end
   object PopupMenu1: TPopupMenu
@@ -563,16 +566,16 @@ object Form1: TForm1
       Action = EditCut1
     end
     object P1: TMenuItem
-      Action = Action4
+      Action = Past1
     end
     object A1: TMenuItem
       Action = EditSelectAll1
     end
     object U1: TMenuItem
-      Action = Action3
+      Action = Undo1
     end
     object ReDo1: TMenuItem
-      Action = Action5
+      Action = Redo
     end
   end
   object MainMenu1: TMainMenu
@@ -581,7 +584,7 @@ object Form1: TForm1
     object N1: TMenuItem
       Caption = #12501#12449#12452#12523
       object N4: TMenuItem
-        Action = Action1
+        Action = Execute1
       end
       object N5: TMenuItem
         Caption = '-'
@@ -599,22 +602,22 @@ object Form1: TForm1
         Action = EditCut1
       end
       object P2: TMenuItem
-        Action = Action4
+        Action = Past1
       end
       object A2: TMenuItem
         Action = EditSelectAll1
       end
       object U2: TMenuItem
-        Action = Action3
+        Action = Undo1
       end
-      object ReDo2: TMenuItem
-        Action = Action5
+      object R2: TMenuItem
+        Action = Redo
       end
     end
     object N3: TMenuItem
       Caption = #12504#12523#12503
       object N6: TMenuItem
-        Action = Action2
+        Action = Hint1
       end
     end
   end
