@@ -57,7 +57,6 @@ type
     ToolButton8: TToolButton;
     ToolButton9: TToolButton;
     ToolButton10: TToolButton;
-    Memo5: TMemo;
     Undo1: TAction;
     Past1: TAction;
     Redo1: TAction;
@@ -249,22 +248,11 @@ begin
   for i := 0 to JSON.count - 1 do
   begin
     pair := JSON.Pairs[i];
-    if pair = nil then
-    begin
-      TreeView1.Items.AddChild(item, 'error');
-      Showmessage('ì‡ïîÉGÉâÅ[Ç…ÇÊÇËíÜífÇµÇ‹ÇµÇΩ');
-      TabControl1.TabIndex := 2;
-      TabControl1Change(nil);
-      TabControl1.Show;
-      Exit;
-    end
-    else
-      val := pair.JsonValue;
+    val := pair.JsonValue;
     if val is TJSONObject then
     begin
       s := c + pair.JsonString.ToString + ':';
-      JSON := pair.JsonValue as TJSONObject;
-      loop(TreeView1.Items.AddChild(item, s), JSON);
+      loop(TreeView1.Items.AddChild(item, s), val as TJSONObject);
     end
     else if val is TJSONArray then
     begin
@@ -389,8 +377,6 @@ begin
       Memo2.Text := Memo3.Text;
     1:
       Memo2.Text := Memo4.Text;
-    2:
-      Memo2.Text := Memo5.Text;
   end;
 end;
 
